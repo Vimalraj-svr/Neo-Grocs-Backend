@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationResponse {
-    private String token;
+public class PatchRequest {
     private String email;
+    private String country;
+    private String contact;
+    private String name;
 }

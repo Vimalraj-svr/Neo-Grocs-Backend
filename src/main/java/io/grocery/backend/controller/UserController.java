@@ -1,14 +1,20 @@
 package io.grocery.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import io.grocery.backend.dto.AuthRequest;
-import io.grocery.backend.dto.AuthenticationResponse;
+import io.grocery.backend.dto.AuthResponse;
+import io.grocery.backend.dto.PatchRequest;
 import io.grocery.backend.dto.UserDto;
 import io.grocery.backend.entity.User;
 import io.grocery.backend.service.UserService;
@@ -25,8 +31,37 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody AuthRequest user) {
-        return ResponseEntity.ok(userService.authUser(user));
+    public ResponseEntity<?> loginUser(@RequestBody AuthRequest user) {
+        var authResponse = userService.authUser(user);
+        if (authResponse == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
+
+        return ResponseEntity.ok(authResponse);
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody PatchRequest request) {
+        var updatedResponse = userService.updateUser(request);
+        if (updatedResponse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedResponse);
+    }
+
+    @GetMapping("/user/{uid}")
+    public ResponseEntity<?> findByUserId(@PathVariable Long uid) {
+        var existingUser = userService.findByUserId(uid);
+        if (existingUser == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(existingUser);
+    }
+
+    
+    @GetMapping("/user/current")
+    public ResponseEntity<User> findCurrentuser(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(user);
     }
 
 }
