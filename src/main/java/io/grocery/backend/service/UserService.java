@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -20,6 +21,7 @@ import io.grocery.backend.entity.User;
 import io.grocery.backend.entity.Enumerate.Role;
 import io.grocery.backend.repository.UserRepository;
 import io.grocery.backend.util.JwtUtil;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @Service
 @Transactional
@@ -73,19 +75,17 @@ public class UserService {
 				.build());
 	}
 
-	public ResponseEntity<?> updateUser(PatchRequest request) {
-		try {
-			User existingUser = userRepository.findByEmail(request.getEmail()).orElseThrow();
-			if (existingUser == null) {
-				return ResponseEntity.notFound().build();
-			}
-			existingUser.setName(request.getName());
-			existingUser.setContact(request.getContact());
-			userRepository.save(existingUser);
-			return ResponseEntity.ok(existingUser);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user");
+	@PutMapping("/update")
+	public ResponseEntity<?> updateUser(@RequestBody PatchRequest request) {
+		User existingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
+
+		if (existingUser == null) {
+			return ResponseEntity.notFound().build();
 		}
+		existingUser.setName(request.getName());
+		existingUser.setContact(request.getContact());
+		userRepository.save(existingUser);
+		return ResponseEntity.ok(existingUser);
 	}
 
 	public ResponseEntity<?> findByUserId(Long uid) {

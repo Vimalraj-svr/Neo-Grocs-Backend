@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import io.grocery.backend.dto.AuthRequest;
-import io.grocery.backend.dto.AuthResponse;
 import io.grocery.backend.dto.PatchRequest;
 import io.grocery.backend.dto.UserDto;
 import io.grocery.backend.entity.User;
@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok(authResponse);
     }
 
-    @PatchMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody PatchRequest request) {
         var updatedResponse = userService.updateUser(request);
         if (updatedResponse == null) {
@@ -57,7 +57,6 @@ public class UserController {
         }
         return ResponseEntity.ok(existingUser);
     }
-
     
     @GetMapping("/user/current")
     public ResponseEntity<User> findCurrentuser(@AuthenticationPrincipal User user) {

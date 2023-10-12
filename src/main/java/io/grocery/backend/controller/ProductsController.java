@@ -9,13 +9,13 @@ import io.grocery.backend.entity.Products;
 import io.grocery.backend.service.ProductService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductsController {
 
     @Autowired
     private ProductService productService;
 
-    //@CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/addproduct")
+    @PostMapping("/admin/addproduct")
     public ResponseEntity<String> addProduct(@RequestBody ProductRequest product) {
         if (productService.addProduct(product)) {
             return ResponseEntity.status(200).body("Product added to inventory");

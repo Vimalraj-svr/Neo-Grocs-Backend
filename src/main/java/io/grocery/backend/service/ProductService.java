@@ -17,14 +17,14 @@ public class ProductService {
     private ProductsRepository productsRepository;
 
     public boolean addProduct(ProductRequest req) {
-        if (productsRepository.findByTitle(req.getProductName()).isPresent()) {
+        if (productsRepository.findByTitle(req.getTitle()).isPresent()) {
             return false;
         }
 
         Products product = Products.builder()
-                .title(req.getProductName())
-                .price(req.getProductPrice())
-                .description(req.getProductDesc())
+                .title(req.getTitle())
+                .price(req.getPrice())
+                .description(req.getDescription())
                 .image(req.getImage())
                 .quantity(req.getQuantity())
                 .build();
