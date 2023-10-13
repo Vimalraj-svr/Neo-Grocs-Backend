@@ -2,6 +2,7 @@ package io.grocery.backend.controller;
 
 import io.grocery.backend.dto.CartItemDto;
 import io.grocery.backend.dto.CartItemResponseDto;
+import io.grocery.backend.dto.CustomerDetailsDto;
 import io.grocery.backend.entity.User;
 import io.grocery.backend.service.CartItemService;
 
@@ -30,6 +31,11 @@ public class CartItemController {
     @GetMapping("/get")
     public List<CartItemResponseDto> retrieveCart(@AuthenticationPrincipal User user) {
         return cartItemService.retrieveCart(user);
+    }
+
+    @GetMapping("/customer-details")
+    public List<CustomerDetailsDto> getCustomerDetailsWithCartProducts() {
+        return cartItemService.getCustomerDetailsWithCartProducts();
     }
 
 }

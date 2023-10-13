@@ -1,4 +1,4 @@
-package io.grocery.backend.config;
+ package io.grocery.backend.config;
 
 import java.util.Arrays;
 
@@ -32,18 +32,20 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
                 httpSecurity
-                                .cors(corsConfirguarationSource -> corsConfirguarationSource.configurationSource(
-                                                corsConfigurationSource()))
+                .cors(corsConfigurationSource -> corsConfigurationSource.configurationSource(corsConfigurationSource()))
+
                                 .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(authorize -> authorize
-                                                .requestMatchers("/login",
+                                                .requestMatchers("/login","/customer-details",
                                                                 "/allproducts", "/add", "/isadmin","/admin/addproduct")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authenticationProvider(authenticationProvider)
-                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                                .securityContext(securityContext -> securityContext
+			.requireExplicitSave(true));
                 return httpSecurity.build();
         }
 

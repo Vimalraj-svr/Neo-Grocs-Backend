@@ -42,6 +42,11 @@ public class User implements UserDetails {
   private String contact;
   private Role role;
 
+  public String getName()
+  {
+    return name;
+  }
+
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<CartItem> cartItems;
 

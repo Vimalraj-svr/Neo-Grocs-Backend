@@ -75,8 +75,7 @@ public class UserService {
 				.build());
 	}
 
-	@PutMapping("/update")
-	public ResponseEntity<?> updateUser(@RequestBody PatchRequest request) {
+	public ResponseEntity<?> updateUser(PatchRequest request) {
 		User existingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
 
 		if (existingUser == null) {

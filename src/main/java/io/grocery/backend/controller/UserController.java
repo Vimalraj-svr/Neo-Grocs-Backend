@@ -1,5 +1,7 @@
 package io.grocery.backend.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import io.grocery.backend.dto.AuthRequest;
 import io.grocery.backend.dto.PatchRequest;
 import io.grocery.backend.dto.UserDto;
 import io.grocery.backend.entity.User;
+import io.grocery.backend.repository.UserRepository;
 import io.grocery.backend.service.UserService;
 
 @Controller
@@ -24,6 +27,13 @@ import io.grocery.backend.service.UserService;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/user/{email}")
+    public ResponseEntity<?> findUserandCartItem(@PathVariable String email) {
+        return ResponseEntity.ok(userRepository.findByEmail(email));
+    }
 
     @PostMapping("/add")
     public ResponseEntity<String> addNewUser(@RequestBody UserDto user) {
@@ -49,18 +59,19 @@ public class UserController {
         return ResponseEntity.ok(updatedResponse);
     }
 
-    @GetMapping("/user/{uid}")
-    public ResponseEntity<?> findByUserId(@PathVariable Long uid) {
-        var existingUser = userService.findByUserId(uid);
-        if (existingUser == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(existingUser);
-    }
-    
-    @GetMapping("/user/current")
-    public ResponseEntity<User> findCurrentuser(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(user);
-    }
+    // @GetMapping("/user/{uid}")
+    // public ResponseEntity<?> findByUserId(@PathVariable Long uid) {
+    // var existingUser = userService.findByUserId(uid);
+    // if (existingUser == null) {
+    // return ResponseEntity.notFound().build();
+    // }
+    // return ResponseEntity.ok(existingUser);
+    // }
+
+    // @GetMapping("/user/current")
+    // public ResponseEntity<User> findCurrentuser(@AuthenticationPrincipal User
+    // user) {
+    // return ResponseEntity.ok(user);
+    // }
 
 }
